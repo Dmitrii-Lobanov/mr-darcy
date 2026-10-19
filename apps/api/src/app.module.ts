@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthController } from './health.controller.js';
+import { SessionEntity } from './sessions/session.entity.js';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { HealthController } from './health.controller.js';
         type: 'postgres',
         url: config.getOrThrow<string>('DATABASE_URL'),
 
-        entities: [],
+        entities: [SessionEntity],
         migrations: [],
 
         synchronize: false,
