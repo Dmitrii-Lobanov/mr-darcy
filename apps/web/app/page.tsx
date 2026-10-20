@@ -14,7 +14,7 @@ export default async function CatalogPage() {
       {sessions.length === 0 ? (
         <p>There are no upcoming classes. Please check back soon.</p>
       ) : (
-        <ul>
+        <ul className="catalog-grid">
           {sessions.map((session) => {
             const startsAt = new Intl.DateTimeFormat('en-US', {
               dateStyle: 'full',
@@ -29,13 +29,17 @@ export default async function CatalogPage() {
 
             return (
               <li key={session.id}>
-                <article>
-                  <h2>
-                    <Link href={`/sessions/${session.id}`}>
-                      {session.title}
-                    </Link>
-                  </h2>
-                  <p>{session.description}</p>
+                <article className="session-card">
+                  <section className="intro">
+                    <p className="eyebrow">Small classes. Good company.</p>
+                    <h1>Make room for a lovely afternoon.</h1>
+                    <p>
+                      Hands in clay. Flour on the table. Discover something
+                      worth making time for.
+                    </p>
+                  </section>
+
+                  <h3>Upcoming classes</h3>
                   <p>{session.location}</p>
 
                   <p>
@@ -44,9 +48,11 @@ export default async function CatalogPage() {
                     {session.timeZone}
                   </p>
 
-                  <p>{price} per person</p>
+                  <p className="price">
+                    <strong>{price}</strong> per person
+                  </p>
                   <p>Class capacity: {session.capacity} places</p>
-                  <p>Booking opens soon.</p>
+                  <p className="booking-status">Booking opens soon.</p>
                 </article>
               </li>
             );

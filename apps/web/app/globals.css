@@ -1,0 +1,250 @@
+:root {
+  --paper: #f7f4ed;
+  --surface: #fffcf7;
+  --ink: #233c33;
+  --muted: #59645c;
+  --accent: #8e462f;
+  --line: #d9d6c9;
+  --soft: #e9eddf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.65;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.25em;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 5px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+h1 {
+  max-width: 20ch;
+  margin: 1rem 0;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: -0.04em;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+p {
+  max-width: 70ch;
+}
+
+.site-header,
+main,
+.site-footer {
+  width: min(100% - 3rem, 72rem);
+  margin-inline: auto;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tagline,
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tagline {
+  margin: 0.25rem 0 0;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+main {
+  min-height: 65vh;
+  padding-block: 3rem;
+}
+
+.intro {
+  padding-block: 1rem 3rem;
+}
+
+.intro > p:last-child {
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.session-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.75rem;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--accent);
+  background: var(--surface);
+}
+
+.session-card h3 {
+  margin: 0 0 1rem;
+}
+
+.session-card p {
+  margin-block: 0 1rem;
+}
+
+.session-card .price {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.price strong {
+  font-size: 1.4rem;
+}
+
+.session-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.booking-status {
+  align-self: flex-start;
+  padding: 0.35rem 0.7rem;
+  background: var(--soft);
+  font-size: 0.8rem;
+}
+
+.session-facts {
+  display: grid;
+  grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr);
+  gap: 1rem 2rem;
+  max-width: 48rem;
+  margin-block: 2.5rem;
+  padding-block: 2rem;
+  border-block: 1px solid var(--line);
+}
+
+.session-facts dt {
+  color: var(--muted);
+}
+
+.session-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.booking-note {
+  max-width: 48rem;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+}
+
+.booking-note h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+button {
+  padding: 0.8rem 1.2rem;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #365448;
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+  padding: 0.75rem;
+  background: var(--surface);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (max-width: 40rem) {
+  .session-facts {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+
+  .session-facts dd {
+    margin-bottom: 1rem;
+  }
+
+  .session-card {
+    padding: 1.25rem;
+  }
+}

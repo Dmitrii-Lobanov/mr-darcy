@@ -37,7 +37,7 @@ export default async function SessionPage({
       <h1>{session.title}</h1>
       <p>{session.description}</p>
 
-      <dl>
+      <dl className="session-facts">
         <dt>When</dt>
         <dd>
           <time dateTime={session.startsAt}>{startsAt}</time>
@@ -58,7 +58,7 @@ export default async function SessionPage({
         <dd>{price} per person</dd>
       </dl>
 
-      <section aria-labelledby="booking-status">
+      <section className="booking-note" aria-labelledby="booking-status">
         <h2 id="booking-status">Booking opens soon</h2>
         <p>
           Reservations are not open yet. For now, explore our upcoming classes.
