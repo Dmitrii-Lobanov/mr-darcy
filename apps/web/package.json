@@ -1,5 +1,8 @@
 {
   "name": "@mr-darcy/web",
   "version": "0.1.0",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "@mr-darcy/api-contract": "^0.1.0"
+  }
 }

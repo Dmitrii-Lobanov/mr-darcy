@@ -1,0 +1,11 @@
+{
+  "name": "@mr-darcy/api-contract",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./generated/schema.d.ts"
+    }
+  }
+}
