@@ -3,6 +3,8 @@ import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
 
 export default defineConfig([
   {
@@ -36,6 +38,10 @@ export default defineConfig([
         },
       ],
     },
+  },
+  {
+    files: ['apps/web/**/*.{js,jsx,ts,tsx}'],
+    extends: [nextVitals, nextTypescript],
   },
   prettier,
 ]);
