@@ -23,6 +23,9 @@
     "dev": "npm run build && concurrently --kill-others \"tsc --watch --preserveWatchOutput\" \"node --watch dist/main.js\"",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "npm run build && typeorm migration:generate -d dist/database/data-source.js",
+    "db:migrate": "npm run build && typeorm migration:run -d dist/database/data-source.js --transaction all",
+    "db:status": "npm run build && typeorm migration:show -d dist/database/data-source.js"
   }
 }

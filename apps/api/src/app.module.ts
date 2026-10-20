@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthController } from './health.controller.js';
-import { SessionEntity } from './sessions/session.entity.js';
+import { createDatabaseOptions } from './database/database-options.js';
 
 @Module({
   imports: [
@@ -16,16 +16,7 @@ import { SessionEntity } from './sessions/session.entity.js';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        url: config.getOrThrow<string>('DATABASE_URL'),
-
-        entities: [SessionEntity],
-        migrations: [],
-
-        synchronize: false,
-        migrationsRun: false,
-
-        connectTimeoutMS: 5000,
+        ...createDatabaseOptions(config.getOrThrow<string>('DATABASE_URL')),
         retryAttempts: 3,
         retryDelay: 1000,
       }),
