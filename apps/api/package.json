@@ -26,6 +26,7 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "npm run build && typeorm migration:generate -d dist/database/data-source.js",
     "db:migrate": "npm run build && typeorm migration:run -d dist/database/data-source.js --transaction all",
-    "db:status": "npm run build && typeorm migration:show -d dist/database/data-source.js"
+    "db:status": "npm run build && typeorm migration:show -d dist/database/data-source.js",
+    "db:seed": "npm run build && node dist/database/seed.js"
   }
 }
