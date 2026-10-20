@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthController } from './health.controller.js';
 import { createDatabaseOptions } from './database/database-options.js';
+import { SessionsModule } from './sessions/sessions.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { createDatabaseOptions } from './database/database-options.js';
         retryDelay: 1000,
       }),
     }),
+    SessionsModule,
   ],
   controllers: [HealthController],
 })
