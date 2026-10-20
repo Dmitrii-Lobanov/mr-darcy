@@ -80,7 +80,7 @@ function exampleSession(id: string, startsAt: Date) {
   };
 }
 
-await test('catalog excludes past sessions and orders upcoming sessions', async () => {
+void test('catalog excludes past sessions and orders upcoming sessions', async () => {
   const now = Date.now();
   const day = 24 * 60 * 60 * 1000;
 
@@ -116,4 +116,90 @@ await test('catalog excludes past sessions and orders upcoming sessions', async 
   assert.equal(body[0]?.timeZone, 'America/Guayaquil');
   assert.equal(body[0]?.priceMinor, 4800);
   assert.equal(body[0]?.currency, 'USD');
+});
+
+void test('session details return the persisted public fields', async () => {
+  const session = exampleSession(
+    '11111111-1111-4111-8111-111111111111',
+    new Date(Date.now() + 24 * 60 * 60 * 1000),
+  );
+
+  await database.getRepository(SessionEntity).insert(session);
+
+  const response = await fetch(`${baseUrl}/api/sessions/${session.id}`);
+
+  assert.equal(response.status, 200);
+
+  const body: unknown = await response.json();
+
+  assert.deepEqual(body, {
+    id: session.id,
+    title: session.title,
+    description: session.description,
+    location: session.location,
+    startsAt: session.startsAt.toISOString(),
+    endsAt: session.endsAt.toISOString(),
+    timeZone: session.timeZone,
+    capacity: session.capacity,
+    priceMinor: session.priceMinor,
+    currency: session.currency,
+  });
+});
+
+void test('malformed session IDs return 400', async () => {
+  const response = await fetch(`${baseUrl}/api/sessions/not-a-uuid`);
+
+  assert.equal(response.status, 400);
+});
+
+void test('unknown session IDs return 404', async () => {
+  const response = await fetch(
+    `${baseUrl}/api/sessions/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`,
+  );
+
+  assert.equal(response.status, 404);
+});
+
+void test('an empty catalog returns an empty array', async () => {
+  const response = await fetch(`${baseUrl}/api/sessions`);
+
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), []);
+});
+
+void test('database constraints reject invalid session data', async () => {
+  const valid = exampleSession(
+    '11111111-1111-4111-8111-111111111111',
+    new Date(Date.now() + 24 * 60 * 60 * 1000),
+  );
+
+  const invalidCases = [
+    {
+      values: { ...valid, capacity: 0 },
+      constraint: 'sessions_capacity_positive',
+    },
+    {
+      values: { ...valid, priceMinor: -1 },
+      constraint: 'sessions_price_nonnegative',
+    },
+    {
+      values: { ...valid, endsAt: valid.startsAt },
+      constraint: 'sessions_valid_time_range',
+    },
+    {
+      values: { ...valid, title: '   ' },
+      constraint: 'sessions_title_nonblank',
+    },
+  ];
+
+  const repository = database.getRepository(SessionEntity);
+
+  for (const { values, constraint } of invalidCases) {
+    await assert.rejects(repository.insert(values), {
+      code: '23514',
+      constraint,
+    });
+  }
+
+  assert.equal(await repository.count(), 0);
 });
