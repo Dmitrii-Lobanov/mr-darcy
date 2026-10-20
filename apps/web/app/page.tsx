@@ -1,4 +1,5 @@
 import { getSessions } from '../lib/api';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +30,11 @@ export default async function CatalogPage() {
             return (
               <li key={session.id}>
                 <article>
-                  <h2>{session.title}</h2>
+                  <h2>
+                    <Link href={`/sessions/${session.id}`}>
+                      {session.title}
+                    </Link>
+                  </h2>
                   <p>{session.description}</p>
                   <p>{session.location}</p>
 

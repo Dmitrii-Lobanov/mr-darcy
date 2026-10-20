@@ -24,3 +24,23 @@ export async function getSessions() {
 
   return data;
 }
+
+export async function getSession(id: string) {
+  const { data, response } = await client.GET('/api/sessions/{id}', {
+    params: {
+      path: { id },
+    },
+    cache: 'no-store',
+    signal: AbortSignal.timeout(5000),
+  });
+
+  if (response.status === 400 || response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok || data === undefined) {
+    throw new Error('Could not load the session');
+  }
+
+  return data;
+}
