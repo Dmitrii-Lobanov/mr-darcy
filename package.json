@@ -8,6 +8,7 @@
   ],
   "devDependencies": {
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.2",
@@ -23,6 +24,7 @@
     "lint": "eslint apps/api/src apps/web --max-warnings 0",
     "lint:fix": "eslint apps/api/src apps/web --fix --max-warnings 0",
     "api:contract": "openapi-typescript http://127.0.0.1:3001/api/docs-json -o packages/api-contract/generated/schema.d.ts",
-    "api:contract:check": "npm run api:contract -- --check"
+    "api:contract:check": "npm run api:contract -- --check",
+    "test:e2e": "npm run build --workspace @mr-darcy/api && npm run build --workspace @mr-darcy/web && playwright test"
   }
 }

@@ -8,8 +8,16 @@ export default async function CatalogPage() {
 
   return (
     <>
-      <h1>Upcoming classes</h1>
-      <p>Find your next afternoon well spent.</p>
+      <section className="intro">
+        <p className="eyebrow">Small classes. Good company.</p>
+        <h1>Make room for a lovely afternoon.</h1>
+        <p>
+          Hands in clay. Flour on the table. Discover something worth making
+          time for.
+        </p>
+      </section>
+
+      <h2>Upcoming classes</h2>
 
       {sessions.length === 0 ? (
         <p>There are no upcoming classes. Please check back soon.</p>
@@ -30,16 +38,12 @@ export default async function CatalogPage() {
             return (
               <li key={session.id}>
                 <article className="session-card">
-                  <section className="intro">
-                    <p className="eyebrow">Small classes. Good company.</p>
-                    <h1>Make room for a lovely afternoon.</h1>
-                    <p>
-                      Hands in clay. Flour on the table. Discover something
-                      worth making time for.
-                    </p>
-                  </section>
-
-                  <h3>Upcoming classes</h3>
+                  <h3>
+                    <Link href={`/sessions/${session.id}`}>
+                      {session.title}
+                    </Link>
+                  </h3>
+                  <p>{session.description}</p>
                   <p>{session.location}</p>
 
                   <p>
