@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  catalog:
+    name: Catalog checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    env:
+      API_ORIGIN: http://127.0.0.1:3101
+      NEXT_TELEMETRY_DISABLED: '1'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare local configuration
+        run: cp .env.example .env
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check backend types
+        run: npm run typecheck --workspace @mr-darcy/api
+
+      - name: Check frontend types
+        run: npm run typecheck --workspace @mr-darcy/web
+
+      - name: Start PostgreSQL
+        run: docker compose --profile test up -d --wait
+
+      - name: Apply application migrations
+        run: npm run db:migrate --workspace @mr-darcy/api
+
+      - name: Check generated API contract
+        shell: bash
+        run: |
+          node apps/api/dist/main.js > "$RUNNER_TEMP/mr-darcy-api.log" 2>&1 &
+          api_pid=$!
+          trap 'kill "$api_pid" 2>/dev/null || true' EXIT
+
+          if ! curl \
+            --fail \
+            --silent \
+            --show-error \
+            --retry 20 \
+            --retry-connrefused \
+            --retry-delay 1 \
+            --retry-max-time 60 \
+            --max-time 5 \
+            --output /dev/null \
+            http://127.0.0.1:3001/api/docs-json; then
+            cat "$RUNNER_TEMP/mr-darcy-api.log"
+            exit 1
+          fi
+
+          npm run api:contract:check
+
+      - name: Run PostgreSQL integration tests
+        run: npm run test:integration --workspace @mr-darcy/api
+
+      - name: Install browser and system dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Build applications and run browser tests
+        run: npm run test:e2e
+
+      - name: Show database logs on failure
+        if: failure()
+        run: docker compose --profile test logs --no-color
+
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: catalog-failure-diagnostics
+          path: |
+            test-results/
+            ${{ runner.temp }}/mr-darcy-api.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Stop PostgreSQL
+        if: always()
+        run: docker compose --profile test down --volumes --remove-orphans
