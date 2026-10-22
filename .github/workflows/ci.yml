@@ -54,6 +54,9 @@ jobs:
       - name: Start PostgreSQL
         run: docker compose --profile test up -d --wait
 
+      - name: Run backend unit tests
+        run: npm run test:unit --workspace @mr-darcy/api
+
       - name: Apply application migrations
         run: npm run db:migrate --workspace @mr-darcy/api
 
