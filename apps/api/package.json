@@ -33,7 +33,7 @@
     "db:migrate": "npm run build && typeorm migration:run -d dist/database/data-source.js --transaction all",
     "db:status": "npm run build && typeorm migration:show -d dist/database/data-source.js",
     "db:seed": "npm run build && node dist/database/seed.js",
-    "test:unit": "npm run build && node --test dist/auth/password.service.test.js",
+    "test:unit": "npm run build && node --test dist/auth/password.service.test.js dist/auth/register.dto.test.js",
     "test:integration": "npm run build && node --test dist/sessions/sessions.integration.test.js dist/users/users.integration.test.js",
     "start:browser-test": "node dist/testing/browser-server.js"
   }
